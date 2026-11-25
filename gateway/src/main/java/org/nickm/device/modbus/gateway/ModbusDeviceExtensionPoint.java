@@ -1,4 +1,4 @@
-package org.example.device.example.gateway;
+package org.nickm.device.modbus.gateway;
 
 import com.inductiveautomation.ignition.gateway.config.ValidationErrors.Builder;
 import com.inductiveautomation.ignition.gateway.dataroutes.openapi.SchemaUtil;
@@ -13,23 +13,23 @@ import java.util.Set;
 
 // the extension point used in the module hook getDeviceExtensionPoints method
 // <ExampleDeviceConfig> is a "type" parameter, which tells the class what type it's working with. e.g. List<String> names;
-public class ExampleDeviceExtensionPoint extends DeviceExtensionPoint<ExampleDeviceConfig> {
+public class ModbusDeviceExtensionPoint extends DeviceExtensionPoint<ModbusDeviceConfig> {
 
   public static final String TYPE_ID = "ia.io.ExampleDevice";
 
-  public ExampleDeviceExtensionPoint() {
+  public ModbusDeviceExtensionPoint() {
     super(
             TYPE_ID,
             "ExampleDevice.Meta.DisplayName",
             "ExampleDevice.Meta.Description",
-            ExampleDeviceConfig.class);
+            ModbusDeviceConfig.class);
   }
 
   @Override
   protected Device createDevice(
-          DeviceContext context, DeviceProfileConfig profileConfig, ExampleDeviceConfig deviceConfig) {
+          DeviceContext context, DeviceProfileConfig profileConfig, ModbusDeviceConfig deviceConfig) {
 
-    return new ExampleDevice(context, deviceConfig);
+    return new ModbusDevice(context, deviceConfig);
   }
 
   @Override
@@ -40,12 +40,12 @@ public class ExampleDeviceExtensionPoint extends DeviceExtensionPoint<ExampleDev
                     "Device Connection",
                     TYPE_ID,
                     SchemaUtil.fromType(DeviceProfileConfig.class),
-                    SchemaUtil.fromType(ExampleDeviceConfig.class),
+                    SchemaUtil.fromType(ModbusDeviceConfig.class),
                     Set.of()));
   }
 
   @Override
-  protected void validate(ExampleDeviceConfig config, Builder errors) {
+  protected void validate(ModbusDeviceConfig config, Builder errors) {
     errors.check(config.general().tagCount() > 0, "Tag Count must be positive");
   }
 }

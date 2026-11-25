@@ -1,4 +1,4 @@
-package org.example.device.example.gateway;
+package org.nickm.device.modbus.gateway;
 
 import com.inductiveautomation.ignition.gateway.opcua.server.api.Device;
 import com.inductiveautomation.ignition.gateway.opcua.server.api.DeviceContext;
@@ -25,7 +25,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExampleDevice extends ManagedAddressSpaceWithLifecycle implements Device {
+public class ModbusDevice extends ManagedAddressSpaceWithLifecycle implements Device {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -33,9 +33,9 @@ public class ExampleDevice extends ManagedAddressSpaceWithLifecycle implements D
   private final SubscriptionModel subscriptionModel;
 
   private final DeviceContext context;
-  private final ExampleDeviceConfig config;
+  private final ModbusDeviceConfig config;
 
-  public ExampleDevice(DeviceContext context, ExampleDeviceConfig config) {
+  public ModbusDevice(DeviceContext context, ModbusDeviceConfig config) {
     super(context.getServer());
 
     this.context = context;
@@ -57,7 +57,7 @@ public class ExampleDevice extends ManagedAddressSpaceWithLifecycle implements D
     // create a basic tag updater service, let the gateway run it separately from UA subscription
     // management
     context.getGatewayContext().getExecutionManager().registerAtFixedRate(
-            ExampleDeviceExtensionPoint.TYPE_ID,
+            ModbusDeviceExtensionPoint.TYPE_ID,
             context.getName(),
             simulator,
             1, TimeUnit.SECONDS
@@ -101,7 +101,7 @@ public class ExampleDevice extends ManagedAddressSpaceWithLifecycle implements D
 
     context.getGatewayContext()
             .getExecutionManager()
-            .unRegister(ExampleDeviceExtensionPoint.TYPE_ID, context.getName());
+            .unRegister(ModbusDeviceExtensionPoint.TYPE_ID, context.getName());
   }
 
   private void addDynamicNodes(UaFolderNode rootNode) {

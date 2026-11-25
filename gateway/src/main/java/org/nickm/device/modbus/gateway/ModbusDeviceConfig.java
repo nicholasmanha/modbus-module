@@ -1,4 +1,4 @@
-package org.example.device.example.gateway;
+package org.nickm.device.modbus.gateway;
 
 import com.inductiveautomation.ignition.gateway.dataroutes.openapi.annotations.DefaultValue;
 import com.inductiveautomation.ignition.gateway.dataroutes.openapi.annotations.Description;
@@ -8,7 +8,7 @@ import com.inductiveautomation.ignition.gateway.dataroutes.openapi.annotations.L
 import com.inductiveautomation.ignition.gateway.dataroutes.openapi.annotations.Required;
 import com.inductiveautomation.ignition.gateway.web.nav.FormFieldType;
 
-public record ExampleDeviceConfig(General general) {
+public record ModbusDeviceConfig(General general) {
 
         record General(
                 @FormCategory("GENERAL")

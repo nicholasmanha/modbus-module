@@ -102,7 +102,7 @@ ignitionModule {
      * Example entry: "com.myorganization.vectorizer.VectorizerDesignerHook" to "D"
      */
     hooks.putAll(mapOf(
-        "org.example.device.example.gateway.ModuleHook" to "G"
+        "org.nickm.device.modbus.gateway.ModuleHook" to "G"
     ))
 
     /*

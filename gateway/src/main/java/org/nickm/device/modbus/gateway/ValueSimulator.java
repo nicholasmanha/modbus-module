@@ -1,4 +1,4 @@
-package org.example.device.example.gateway;
+package org.nickm.device.modbus.gateway;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,4 +1,4 @@
-package org.example.device.example.gateway.settings;
+package org.nickm.device.modbus.gateway.settings;
 
 import com.inductiveautomation.ignition.gateway.localdb.persistence.IntField;
 import com.inductiveautomation.ignition.gateway.localdb.persistence.LongField;
@@ -14,7 +14,7 @@ import simpleorm.dataset.SFieldFlags;
  */
 @Deprecated(since = "8.3.0")
 @SuppressWarnings("unused")
-public class ExampleDeviceSettings extends PersistentRecord {
+public class ModbusDeviceSettings extends PersistentRecord {
 
   @Serial
   private static final long serialVersionUID = 1L;
@@ -22,8 +22,8 @@ public class ExampleDeviceSettings extends PersistentRecord {
   /**
    * Needed so that the device record can be saved in the internal database.
    */
-  public static final RecordMeta<ExampleDeviceSettings> META =
-          new RecordMeta<>(ExampleDeviceSettings.class, "ExampleDeviceSettings");
+  public static final RecordMeta<ModbusDeviceSettings> META =
+          new RecordMeta<>(ModbusDeviceSettings.class, "ExampleDeviceSettings");
 
   /**
    * Reference to parent DeviceSettingsRecord: holds items like Device Name setting and Enabled
