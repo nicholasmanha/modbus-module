@@ -29,7 +29,7 @@ public class ModbusDevice extends ManagedAddressSpaceWithLifecycle implements De
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  private final ValueSimulator simulator = new ValueSimulator();
+  private final ModbusPoller poller = new ModbusPoller("localhost", 502);
   private final SubscriptionModel subscriptionModel;
 
   private final DeviceContext context;
@@ -50,18 +50,19 @@ public class ModbusDevice extends ManagedAddressSpaceWithLifecycle implements De
 
   @Override
   public String getStatus() {
-    return "Running";
+    return poller.getStatus();
   }
 
   private void onStartup() {
     // create a basic tag updater service, let the gateway run it separately from UA subscription
     // management
-    context.getGatewayContext().getExecutionManager().registerAtFixedRate(
-            ModbusDeviceExtensionPoint.TYPE_ID,
-            context.getName(),
-            simulator,
-            1, TimeUnit.SECONDS
-    );
+    poller.start();
+//    context.getGatewayContext().getExecutionManager().registerAtFixedRate(
+//            ModbusDeviceExtensionPoint.TYPE_ID,
+//            context.getName(),
+//            simulator,
+//            1, TimeUnit.SECONDS
+//    );
 
     // create a folder node for our configured device
     var rootNode = new UaFolderNode(
@@ -82,7 +83,7 @@ public class ModbusDevice extends ManagedAddressSpaceWithLifecycle implements De
             Reference.Direction.INVERSE
     ));
 
-    addDynamicNodes(rootNode);
+//    addDynamicNodes(rootNode);
 
     addStaticNodes(rootNode, "static", config.general().tagCount(), AccessLevel.READ_WRITE);
     addStaticNodes(rootNode, "readOnly", config.general().tagCount(), AccessLevel.READ_ONLY);
@@ -102,50 +103,52 @@ public class ModbusDevice extends ManagedAddressSpaceWithLifecycle implements De
     context.getGatewayContext()
             .getExecutionManager()
             .unRegister(ModbusDeviceExtensionPoint.TYPE_ID, context.getName());
+    poller.close();
   }
 
-  private void addDynamicNodes(UaFolderNode rootNode) {
-    String name = "dynamic";
-    UaFolderNode folder = new UaFolderNode(
-            getNodeContext(),
-            context.nodeId(name),
-            context.qualifiedName(name),
-            new LocalizedText(name)
-    );
-    getNodeManager().addNode(folder);
 
-    // addOrganizes is just a helper method to an OPC UA "Organizes" references to a folder node
-    rootNode.addOrganizes(folder);
-
-    for (int i = 0; i < config.general().tagCount(); i++) {
-      final int n = i;
-      String formattedName = String.format("%s%d", name, n);
-
-      UaVariableNode node = UaVariableNode.build(getNodeContext(), b ->
-              b.setNodeId(context.nodeId(String.format("%s/node%d", formattedName, n)))
-                      .setBrowseName(context.qualifiedName(formattedName))
-                      .setDisplayName(new LocalizedText(formattedName))
-                      .setDataType(OpcUaDataType.UInt32.getNodeId())
-                      .setTypeDefinition(NodeIds.BaseDataVariableType)
-                      .setAccessLevel(AccessLevel.READ_ONLY)
-                      .setUserAccessLevel(AccessLevel.READ_ONLY)
-                      .build()
-      );
-
-      // just tells our simulator to keep track of this node
-      simulator.addTrackedValue(formattedName, (long) i);
-
-      // an AttributeFilter is used so that when this node is asked for its value, it will call out to the
-      // simulator
-      node.getFilterChain().addLast(AttributeFilters.getValue(
-              getAttributeContext ->
-                      simulator.getTrackedValue(formattedName))
-      );
-
-      getNodeManager().addNode(node);
-      folder.addOrganizes(node);
-    }
-  }
+//  private void addDynamicNodes(UaFolderNode rootNode) {
+//    String name = "dynamic";
+//    UaFolderNode folder = new UaFolderNode(
+//            getNodeContext(),
+//            context.nodeId(name),
+//            context.qualifiedName(name),
+//            new LocalizedText(name)
+//    );
+//    getNodeManager().addNode(folder);
+//
+//    // addOrganizes is just a helper method to an OPC UA "Organizes" references to a folder node
+//    rootNode.addOrganizes(folder);
+//
+//    for (int i = 0; i < config.general().tagCount(); i++) {
+//      final int n = i;
+//      String formattedName = String.format("%s%d", name, n);
+//
+//      UaVariableNode node = UaVariableNode.build(getNodeContext(), b ->
+//              b.setNodeId(context.nodeId(String.format("%s/node%d", formattedName, n)))
+//                      .setBrowseName(context.qualifiedName(formattedName))
+//                      .setDisplayName(new LocalizedText(formattedName))
+//                      .setDataType(OpcUaDataType.UInt32.getNodeId())
+//                      .setTypeDefinition(NodeIds.BaseDataVariableType)
+//                      .setAccessLevel(AccessLevel.READ_ONLY)
+//                      .setUserAccessLevel(AccessLevel.READ_ONLY)
+//                      .build()
+//      );
+//
+//      // just tells our simulator to keep track of this node
+//      simulator.addTrackedValue(formattedName, (long) i);
+//
+//      // an AttributeFilter is used so that when this node is asked for its value, it will call out to the
+//      // simulator
+//      node.getFilterChain().addLast(AttributeFilters.getValue(
+//              getAttributeContext ->
+//                      simulator.getTrackedValue(formattedName))
+//      );
+//
+//      getNodeManager().addNode(node);
+//      folder.addOrganizes(node);
+//    }
+//  }
 
   private void addStaticNodes(
           UaFolderNode rootNode,

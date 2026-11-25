@@ -24,23 +24,23 @@ ignitionModule {
     /*
      * Human readable name of the module, as will be displayed on the gateway status page
      */
-    name.set("exampleDevicetest")
+    name.set("modbusDevice")
 
     /*
      * Name of the '.modl' file to be created, without file extension.
      */
-    fileName.set("exampleDevice")
+    fileName.set("modbusDevice")
     /*
      * Unique identifier for the module.  Reverse domain convention is recommended (e.g.: com.mycompany.charting-module)
      */
-    id.set("org.example.device.example.ExampleDevice")
+    id.set("org.modbus.device.modbus.ModbusDevice")
 
     /*
      * Version of the module.  Here being set to the same version that gradle uses, up above in this file.
      */
     moduleVersion.set("${project.version}")
 
-    moduleDescription.set("A short sentence describing what it does, but not much longer than this.")
+    moduleDescription.set("An OPC-UA Modbus driver that exposes raw data.")
 
     /*
      * Minimum version of Ignition required for the module to function correctly.  This typically won't change over
